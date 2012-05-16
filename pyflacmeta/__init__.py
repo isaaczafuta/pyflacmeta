@@ -1,0 +1,1 @@
+from .pyflacmeta import FLAC
