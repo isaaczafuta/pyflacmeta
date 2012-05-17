@@ -3,6 +3,8 @@ pyflacmeta
 
 Pure Python3 FLAC Metadata Reader
 
+Reads tags (vorbis comments) from FLAC files.
+
 Example usage:
 
 ::
