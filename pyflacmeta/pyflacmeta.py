@@ -66,7 +66,6 @@ class MetadataBlockVorbisComment(object):
             key, value = value.split(b'=')
             self.metadata[key] = str(value, "utf-8")
             offset += length + 4
-        print(self.metadata)
 
 
 class FLAC(object):
