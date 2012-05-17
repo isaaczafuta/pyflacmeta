@@ -63,6 +63,7 @@ class MetadataBlockVorbisComment(object):
             length, = struct.unpack('<I', data[offset:offset + 4])
             value = data[offset + 4:offset + length + 4]
             key, value = value.split(b'=')
+            key = str(key, "ascii")
             self.metadata[key] = str(value, "utf-8")
             offset += length + 4
 
@@ -91,7 +92,6 @@ class FLAC(object):
         vorbiscomment = self.get_vorbis_comment()
         if not vorbiscomment:
             raise KeyError
-        key = key.encode("ascii")
         try:
             value = vorbiscomment.metadata[key]
         except KeyError:
