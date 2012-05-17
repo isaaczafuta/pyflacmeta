@@ -14,7 +14,6 @@ class MetadataBlock(object):
         self.header = MetadataBlockHeader(fp)
         self.last = self.header.last
         self.type = self.header.type
-        print(type)
         size = self.header.size
         self.data = MetadataBlockTypes[self.type](fp, size)
 
@@ -71,8 +70,7 @@ class MetadataBlockVorbisComment(object):
 class FLAC(object):
     def __init__(self, filename):
         with open(filename, "rb") as fp:
-            try:
-                self.read(fp)
+            self.read(fp)
 
     def read(self, fp):
         streammarker = b"fLaC"
@@ -85,7 +83,6 @@ class FLAC(object):
 
     def get_vorbis_comment(self):
         for metadatablock in self.metadatablocks:
-            print(metadatablock.type)
             if metadatablock.type == 4:
                 return metadatablock.data
         return None
