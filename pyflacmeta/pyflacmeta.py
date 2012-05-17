@@ -102,7 +102,7 @@ class FLAC(object):
         vorbiscomment = self.get_vorbis_comment()
         if not vorbiscomment:
             return None
-        return vorbiscomment.metadata.keys()
+        return vorbiscomment.metadata
 
 MetadataBlockTypes = {
     0: MetadataBlockStreamInfo,
