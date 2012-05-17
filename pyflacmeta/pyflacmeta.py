@@ -97,6 +97,12 @@ class FLAC(object):
         except KeyError:
             value = vorbiscomment.metadata[key.lower()]
         return value
+        
+    def keys(self):
+        tags = self.tags()
+        if not tags:
+            return None
+        return tags.keys()
 
     def tags(self):
         vorbiscomment = self.get_vorbis_comment()
