@@ -9,7 +9,7 @@ with open('LICENSE') as f:
 setup(
     name='pyflacmeta',
     version='0.0.1',
-    description='Pure Python3 FLAC Metadata Reader'
+    description='Pure Python3 FLAC Metadata Reader',
     long_description=readme,
     author='Isaac Zafuta',
     author_email='isaac@zafuta.com',
