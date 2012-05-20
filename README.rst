@@ -10,6 +10,7 @@ Example usage:
 ::
 
     >>> import pyflacmeta
+    >>> flacfile = pyflacmeta.FLAC("test.flac")
     >>> flacfile.keys()
     dict_keys(['album', 'artist', 'title', ...])
     >>> flacfile['artist']
