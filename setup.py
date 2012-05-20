@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+import pyflacmeta
 
 with open('README.rst') as f:
     readme = f.read()
@@ -8,7 +9,7 @@ with open('LICENSE') as f:
 
 setup(
     name='pyflacmeta',
-    version='0.0.1',
+    version=pyflacmeta.__version__,
     description='Pure Python3 FLAC Metadata Reader',
     long_description=readme,
     author='Isaac Zafuta',
