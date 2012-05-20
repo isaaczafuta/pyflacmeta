@@ -10,10 +10,11 @@ Example usage:
 ::
 
     >>> import pyflacmeta
-    >>> flacfile = pyflacmeta.FLAC("test.flac")
     >>> flacfile.keys()
-    dict_keys([b'album', b'title', b'tracknumber',...])
-    >>> flacfile["album"]
-    Tigermilk
-    >>> flacfile["artist"]
-    Belle and Sebastian
+    dict_keys(['album', 'artist', 'title', ...])
+    >>> flacfile['artist']
+    'David Bowie'
+    >>> flacfile['title']
+    'Life on Mars?'
+    >>> flacfile.tags()
+    {'album': 'Hunky Dory', 'artist': 'David Bowie', 'title': 'Life on Mars?',...}
