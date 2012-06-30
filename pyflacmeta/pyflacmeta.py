@@ -36,7 +36,7 @@ class MetadataBlockData(object):
 class MetadataBlockStreamInfo(object):
     def __init__(self, fp, size):
         data = fp.read(size)
-        fields = struct.unpack("!2HIH2I16s", data)
+        fields = struct.unpack('!2HIH2I16s', data)
         self.minblocksize = fields[0]
         self.maxblocksize = fields[1]
         self.minframesize = fields[2] >> 8
@@ -50,8 +50,8 @@ class MetadataBlockStreamInfo(object):
 class MetadataBlockVorbisComment(object):
     def __init__(self, fp, size):
         data = fp.read(size)
-        vendor_string_length, = struct.unpack("<I", data[:4])
-        vendor_format = "<%ss" % vendor_string_length
+        vendor_string_length, = struct.unpack('<I', data[:4])
+        vendor_format = '<%ss' % vendor_string_length
         vendor_data = data[4:4 + vendor_string_length]
         self.vendor_string, = struct.unpack(vendor_format, vendor_data)
         metadata_offset = vendor_string_length + 4
@@ -63,18 +63,18 @@ class MetadataBlockVorbisComment(object):
             length, = struct.unpack('<I', data[offset:offset + 4])
             value = data[offset + 4:offset + length + 4]
             key, value = value.split(b'=')
-            key = str(key, "ascii")
-            self.metadata[key] = str(value, "utf-8")
+            key = str(key, 'ascii')
+            self.metadata[key] = str(value, 'utf-8')
             offset += length + 4
 
 
 class FLAC(object):
     def __init__(self, filename):
-        with open(filename, "rb") as fp:
+        with open(filename, 'rb') as fp:
             self.read(fp)
 
     def read(self, fp):
-        streammarker = b"fLaC"
+        streammarker = b'fLaC'
         if fp.read(len(streammarker)) != streammarker:
             raise InvalidFLACError
         self.metadatablocks = []
@@ -86,7 +86,6 @@ class FLAC(object):
         for metadatablock in self.metadatablocks:
             if metadatablock.type == 4:
                 return metadatablock.data
-        return None
 
     def __getitem__(self, key):
         vorbiscomment = self.get_vorbis_comment()
@@ -97,7 +96,7 @@ class FLAC(object):
         except KeyError:
             value = vorbiscomment.metadata[key.lower()]
         return value
-        
+
     def keys(self):
         tags = self.tags()
         if not tags:
