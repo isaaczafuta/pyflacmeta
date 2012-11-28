@@ -62,7 +62,8 @@ class MetadataBlockVorbisComment(object):
         for _ in range(meta_count):
             length, = struct.unpack('<I', data[offset:offset + 4])
             value = data[offset + 4:offset + length + 4]
-            key, value = value.split(b'=')
+            splittag = value.split(b'=')
+            key, value = splittag[0], b'='.join(splittag[1:])
             key = str(key, 'ascii')
             self.metadata[key] = str(value, 'utf-8')
             offset += length + 4
