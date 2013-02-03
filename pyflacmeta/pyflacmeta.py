@@ -36,7 +36,7 @@ class MetadataBlockData(object):
 class MetadataBlockStreamInfo(object):
     def __init__(self, fp, size):
         data = fp.read(size)
-        fields = struct.unpack('!2HIH2I16s', data)
+        fields = struct.unpack('!2HIH2I16B', data)
         self.minblocksize = fields[0]
         self.maxblocksize = fields[1]
         self.minframesize = fields[2] >> 8
@@ -44,7 +44,11 @@ class MetadataBlockStreamInfo(object):
         self.samplerate = fields[4] >> 12
         self.channels = ((fields[4] >> 9) & 0x7) + 1
         self.bitspersample = ((fields[4] >> 4) & 0x1f) + 1
-        self.md5 = fields[5]
+        self.samples = ((fields[4] & 0x0f) << 24) + fields[5]
+        md5 = 0
+        for byte in fields[6:]:
+            md5 = (md5 << 8) + byte
+        self.md5 = md5
 
 
 class MetadataBlockVorbisComment(object):
@@ -83,13 +87,35 @@ class FLAC(object):
         while not self.metadatablocks[-1].last:
             self.metadatablocks.append(MetadataBlock(fp))
 
-    def get_vorbis_comment(self):
+    def _get_vorbis_comment(self):
         for metadatablock in self.metadatablocks:
             if metadatablock.type == 4:
                 return metadatablock.data
 
+    def _get_streaminfo(self):
+        for metadatablock in self.metadatablocks:
+            if metadatablock.type == 0:
+                return metadatablock.data
+
+    def streaminfo(self):
+        streaminfo = self._get_streaminfo()
+        if streaminfo:
+            return {
+                "minblocksize": streaminfo.minblocksize,
+                "maxblocksize": streaminfo.maxblocksize,
+                "minframesize": streaminfo.minframesize,
+                "maxframesize": streaminfo.maxframesize,
+                "samplerate": streaminfo.samplerate,
+                "channels": streaminfo.channels,
+                "bitspersample": streaminfo.bitspersample,
+                "samples": streaminfo.samples,
+                "md5": streaminfo.md5
+            }
+        else:
+            return {}
+
     def __getitem__(self, key):
-        vorbiscomment = self.get_vorbis_comment()
+        vorbiscomment = self._get_vorbis_comment()
         if not vorbiscomment:
             raise KeyError
         try:
@@ -105,7 +131,7 @@ class FLAC(object):
         return tags.keys()
 
     def tags(self):
-        vorbiscomment = self.get_vorbis_comment()
+        vorbiscomment = self._get_vorbis_comment()
         if not vorbiscomment:
             return None
         return vorbiscomment.metadata
