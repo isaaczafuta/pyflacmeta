@@ -46,8 +46,8 @@ class MetadataBlockStreamInfo(object):
         self.bitspersample = ((fields[4] >> 4) & 0x1f) + 1
         self.samples = ((fields[4] & 0x0f) << 24) + fields[5]
         md5 = 0
-        for byte in fields[6:]:
-            md5 = (md5 << 8) + byte
+        for md5_byte in fields[6:]:
+            md5 = (md5 << 8) + md5_byte
         self.md5 = md5
 
 
